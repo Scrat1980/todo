@@ -11,4 +11,3 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 } else {
 	$controller->index();
 }
-

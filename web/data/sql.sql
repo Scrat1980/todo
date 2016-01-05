@@ -1,6 +1,6 @@
 CREATE TABLE todo(
 	id INT(10) NOT NULL AUTO_INCREMENT,
-	name VARCHAR(50),
+	title VARCHAR(50),
 	description VARCHAR(50),
 	PRIMARY KEY (id)
 )

@@ -1,9 +1,5 @@
 <?php 
 
-/**
-* 
-*/
-
 require 'db.php';
 
 class Controller 

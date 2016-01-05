@@ -2,76 +2,67 @@
 
 class Db {
 
-	const DSN = 'mysql:host=localhost;dbname=granat';
+	const DSN = 'mysql:dbname=granat;host=localhost';
 	const HOST = 'localhost';
 	const DBNAME = 'granat';
 	const USER = 'root';
 	const PASSWORD = '1';
 
-	public $mysql;
+	public $dbh;
+	public $table = 'todo';
 
 	public function __construct()
 	{
-		$this->mysql = new mysqli(Db::HOST, Db::USER, Db::PASSWORD, Db::DBNAME) or die('problem');
+		try {
+			$this->dbh = new PDO(Db::DSN, Db::USER, Db::PASSWORD);
+		} catch (PDOException $e) {
+			echo 'Connection failed: ' . $e->getMessage();
+		}
 	}
 
 	public function init()
 	{
-		$query = "SELECT * FROM todo ORDER BY id desc";
-		$results = $this->mysql->query($query);
+		$query = "SELECT id, title, description 
+				  FROM $this->table 
+				  ORDER BY id 
+				  DESC";
+		
 		$data = [];
-		if($results->num_rows){
-			while($row = $results->fetch_object()){
-				$title = $row->name;
-				$description = $row->description;
-				$id = $row->id;
-
-				$data[] = [
-					'title' => $title, 
-					'description' => $description, 
-					'id' => $id
-				];
-			}
+		if($results = $this->dbh->query($query)){
+			$data = $results->fetchAll(PDO::FETCH_ASSOC);	
 		}
+
 		echo json_encode($data);
+
 	}
 
 	public function add_item($title, $description)
 	{
-		$query = "INSERT INTO todo VALUES('', ?, ?)"; 
-	      
-	    if($stmt = $this->mysql->prepare($query)) { 
-	        $stmt->bind_param('ss', $title, $description); 
-	        $stmt->execute(); 
-	        // Возвращаем id во front-end для прикрепления
-	        // элемента списка на экран
-	        echo mysqli_insert_id($this->mysql);
-			$stmt->close();
-	    } else {
-	    	die($this->mysql->error); 
-	    }
+		$query = "INSERT INTO $this->table VALUES(?, ?, ?)"; 
+	    $sth = $this->dbh->prepare($query);  
+	    $data = ['', $title, $description];
+    	$sth->execute($data); 
+        // Возвращаем id во front-end для прикрепления
+        // элемента списка на экран
+        echo $this->dbh->lastInsertId();
 	}
 
 	public function update_by_id($id, $description)
 	{
-		$query = "UPDATE todo
+		$query = "UPDATE $this->table
 				  SET description = ?
 				  WHERE id = ?
 				  LIMIT 1";
 
-		if($stmt = $this->mysql->prepare($query)){
-			$stmt->bind_param('si', $description, $id);
-			$stmt->execute();
-			$stmt->close();
-			// echo $res;
-			// return 'updated successfully';
-		}
+		$sth = $this->dbh->prepare($query);
+		$data = [$description, $id];
+		$sth->execute($data);
 	}
 
 	public function delete_by_id($id)
 	{
-		$query = "DELETE FROM todo WHERE id = $id";
-		$this->mysql->query($query) or die('problem deleting from the db.');
+		$query = "DELETE FROM $this->table WHERE id = $id";
+		$this->dbh->exec($query);
 	}
 }
 ?>

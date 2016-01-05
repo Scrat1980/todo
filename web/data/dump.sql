@@ -24,10 +24,10 @@ DROP TABLE IF EXISTS `todo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `todo` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL,
+  `title` varchar(50) DEFAULT NULL,
   `description` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `todo` (
 
 LOCK TABLES `todo` WRITE;
 /*!40000 ALTER TABLE `todo` DISABLE KEYS */;
-INSERT INTO `todo` VALUES (117,'Item1','Desc 1'),(119,'Item2','Desc 2');
+INSERT INTO `todo` VALUES (1,'1','12'),(124,'3','33');
 /*!40000 ALTER TABLE `todo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-30 13:01:17
+-- Dump completed on 2016-01-05 12:19:16
